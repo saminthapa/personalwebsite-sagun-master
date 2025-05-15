@@ -31,9 +31,9 @@ const About = () => {
   }, []);
 
   const images = [
-     '/s1.jpg', 
+     '/s1.JPG', 
     '/s2.jpg', 
-     '/s3.jpg', 
+     '/s3.JPG', 
     '/s4.jpg', 
     '/s5.jpg', 
     '/s6.jpg', 
