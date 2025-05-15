@@ -1,117 +1,149 @@
-'use client'
+'use client';
 
-import React, { useEffect } from "react";
-import { Mail, Phone, MapPin } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, X } from 'lucide-react';
 
 const Contact = () => {
+  const [toast, setToast] = useState(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.2 }
     );
 
-    const elements = document.querySelectorAll(".animate-on-scroll");
-    elements.forEach((el) => observer.observe(el));
+    document.querySelectorAll('.fade-in-on-scroll').forEach((el) => {
+      el.classList.add('opacity-0', 'translate-y-6', 'transition', 'duration-700', 'ease-out');
+      observer.observe(el);
+    });
 
-    return () => {
-      elements.forEach((el) => observer.unobserve(el));
-    };
+    return () => observer.disconnect();
   }, []);
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText("sarah.johnson@example.com");
-    alert("Email copied to clipboard!");
-  };
-
-  const handleCopyPhone = () => {
-    navigator.clipboard.writeText("(555) 123-4567");
-    alert("Phone number copied to clipboard!");
+  const copyText = (text, label) => {
+    navigator.clipboard.writeText(text);
+    setToast(`${label} copied!`);
+    setTimeout(() => setToast(null), 2500);
   };
 
   return (
-    <section id="contact" className="bg-gradient-to-b from-white to-feminine-gray/30 py-20">
-      <div className="container mx-auto">
-        <h2 className="text-3xl text-gray-600 md:text-4xl font-serif font-bold text-center mb-8 animate-on-scroll">
-          Contact Me
+    <section
+      id="contact"
+      className="bg-white py-10 px-6 sm:px-12 lg:px-20"
+      aria-label="Contact Section"
+    >
+      <div className="max-w-6xl mx-auto text-center fade-in-on-scroll">
+        <h2 className="text-4xl font-serif font-bold text-rose-600 tracking-wide mb-3">
+          Get in Touch
         </h2>
+        <p className="text-gray-600 max-w-xl mx-auto mb-16">
+          Whether you have a question, want to collaborate, or just say hello — I&apos;m here.
+        </p>
+      </div>
 
-        <div className="flex flex-col md:flex-row gap-10 justify-center items-stretch">
-          {/* Contact Info Box */}
-          <div
-            className="animate-on-scroll w-full md:w-1/2 flex flex-col"
-            style={{ transitionDelay: "0.2s" }}
-          >
-            <div className="flex-1 mb-6 p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-              <h3 className="font-serif font-semibold text-xl mb-5 text-gray-800">
-                Let's Connect
-              </h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto fade-in-on-scroll">
+        {/* Email */}
+        <div
+          onClick={() => copyText('sagungautam546@gmail.com', 'Email')}
+          className="cursor-pointer rounded-lg border border-rose-300 bg-rose-50 p-8 flex flex-col items-center text-rose-700 shadow-sm hover:shadow-md hover:bg-rose-100 transition"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && copyText('sagungautam546@gmail.com', 'Email')}
+          aria-label="Copy email address"
+        >
+          <Mail className="w-10 h-10 mb-4" />
+          <h3 className="font-semibold text-lg mb-1">Email</h3>
+          <p className="text-sm font-mono break-words select-text">
+            sagungautam546@gmail.com
+          </p>
+          <small className="mt-3 text-rose-400">Click to copy</small>
+        </div>
 
-              <div className="space-y-4">
-                <div
-                  className="flex items-center space-x-3 p-3 hover:bg-feminine-pink/10 rounded-md transition-colors duration-200 cursor-pointer"
-                  onClick={handleCopyEmail}
-                >
-                  <div className="h-10 w-10 rounded-full bg-pink-50 flex items-center justify-center">
-                    <Mail className="h-5 w-5 text-pink-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-700">Email</p>
-                    <p className="font-medium text-gray-500">sagungautam546@gmail.com</p>
-                  </div>
-                </div>
+        {/* Phone */}
+        <div
+          onClick={() => copyText('+977 9819189047, 9846765197', 'Phone Number')}
+          className="cursor-pointer rounded-lg border border-rose-300 bg-rose-50 p-8 flex flex-col items-center text-rose-700 shadow-sm hover:shadow-md hover:bg-rose-100 transition"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && copyText('+977 9819189047, 9846765197', 'Phone Number')}
+          aria-label="Copy phone numbers"
+        >
+          <Phone className="w-10 h-10 mb-4" />
+          <h3 className="font-semibold text-lg mb-1">Phone</h3>
+          <p className="text-sm font-mono break-words select-text">
+            +977 9819189047, 9846765197
+          </p>
+          <small className="mt-3 text-rose-400">Click to copy</small>
+        </div>
 
-                <div
-                  className="flex items-center space-x-3 p-3 hover:bg-feminine-lavender/10 rounded-md transition-colors duration-200 cursor-pointer"
-                  onClick={handleCopyPhone}
-                >
-                  <div className="h-10 w-10 rounded-full bg-teal-50 flex items-center justify-center">
-                    <Phone className="h-5 w-5 text-teal-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-700">Phone</p>
-                    <p className="font-medium text-gray-500">+977 9819189047 , 9846765197</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-3 p-3 hover:bg-feminine-peach/10 rounded-md transition-colors duration-200">
-                  <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center">
-                    <MapPin className="h-5 w-5 text-orange-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-700">Location</p>
-                    <p className="font-medium text-gray-500">Malepatan-32, 33700 Pokhara</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Map Box */}
-          <div
-            className="animate-on-scroll w-full md:w-1/2"
-            style={{ transitionDelay: "0.4s" }}
-          >
-            <div className="w-full h-80 md:h-96 rounded-lg overflow-hidden shadow-lg">
-              <iframe
-                title="Location Map"
-                className="w-full h-full border-0"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1870.0119775402804!2d84.10919847049823!3d28.114217572633414!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3995a30073d2b64d%3A0x82a99bb081547153!2sSagun%20home!5e0!3m2!1sen!2snp!4v1739279175152!5m2!1sen!2snp"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
-          </div>
+        {/* Location */}
+        <div className="rounded-lg border border-rose-300 bg-rose-50 p-8 flex flex-col items-center text-rose-700 shadow-sm">
+          <MapPin className="w-10 h-10 mb-4" />
+          <h3 className="font-semibold text-lg mb-1">Location</h3>
+          <p className="text-sm text-center">
+            Malepatan-32, 33700 Pokhara
+          </p>
         </div>
       </div>
+
+      {/* Map */}
+      <div className="max-w-5xl mx-auto mt-20 rounded-xl overflow-hidden shadow-lg fade-in-on-scroll">
+        <iframe
+          title="Location Map"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1870.0119775402804!2d84.10919847049823!3d28.114217572633414!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3995a30073d2b64d%3A0x82a99bb081547153!2sSagun%20home!5e0!3m2!1sen!2snp!4v1739279175152!5m2!1sen!2snp"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="w-full h-80 md:h-96"
+          style={{ border: 0 }}
+        />
+      </div>
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-rose-600 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3 animate-toast z-50">
+          <span>{toast}</span>
+          <button
+            aria-label="Close notification"
+            onClick={() => setToast(null)}
+            className="hover:text-rose-300 transition"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes toastFade {
+          0% {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          10% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          90% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+        }
+        .animate-toast {
+          animation: toastFade 2.5s ease forwards;
+        }
+      `}</style>
     </section>
   );
 };
 
 export default Contact;
-
